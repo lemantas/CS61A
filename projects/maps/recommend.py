@@ -125,6 +125,11 @@ def rate_all(user, restaurants, feature_functions):
     # (Note: the name RESTAURANTS is bound to a dictionary of all restaurants)
     predictor = best_predictor(user, RESTAURANTS, feature_functions)
     "*** YOUR CODE HERE ***"
+    reviewed_restaurants = user_reviewed_restaurants(user, restaurants)
+    unreviewed_ratings = {r: predictor(restaurants[r]) for r in restaurants if r not in reviewed_restaurants}
+    reviewed_ratings = {r: user_rating(user, r) for r in reviewed_restaurants}
+    unreviewed_ratings.update(reviewed_ratings)
+    return unreviewed_ratings
 
 def search(query, restaurants):
     """Return each restaurant in RESTAURANTS that has QUERY as a category.
