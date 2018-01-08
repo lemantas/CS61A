@@ -139,6 +139,7 @@ def search(query, restaurants):
     restaurants -- A sequence of restaurants
     """
     "*** YOUR CODE HERE ***"
+    return [r for r in restaurants if query in restaurant_categories(r)]
 
 def feature_set():
     """Return a sequence of feature functions."""
