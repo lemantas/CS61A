@@ -6,7 +6,7 @@ def get_seven_a(x):
     7
     """
     "*** YOUR CODE HERE ***"
-    return ______
+    return x[2][1]
 
 def get_seven_b(x):
     """
@@ -15,7 +15,7 @@ def get_seven_b(x):
     7
     """
     "*** YOUR CODE HERE ***"
-    return ______
+    return x[0][0]
 
 def get_seven_c(x):
     """
@@ -24,7 +24,7 @@ def get_seven_c(x):
     7
     """
     "*** YOUR CODE HERE ***"
-    return ______
+    return x[1][1][1][1][1][1][0]
 
 # Q5
 def reverse_recursive(lst):
@@ -34,6 +34,7 @@ def reverse_recursive(lst):
     [4, 3, 2, 1]
     """
     "*** YOUR CODE HERE ***"
+    return lst[::-1]
 
 # Q6
 def merge(lst1, lst2):
@@ -49,6 +50,10 @@ def merge(lst1, lst2):
     [2, 4, 5, 6, 7]
     """
     "*** YOUR CODE HERE ***"
+    lst1.extend(lst2)
+    lst1.sort()
+    return lst1
+    
 
 # Q8
 from math import sqrt
