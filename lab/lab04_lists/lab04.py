@@ -34,7 +34,10 @@ def reverse_recursive(lst):
     [4, 3, 2, 1]
     """
     "*** YOUR CODE HERE ***"
-    return lst[::-1]
+    if len(lst) <= 1:
+        return [lst[0]]
+    else:
+        return [lst[-1]] + reverse_recursive(lst[:-1])
 
 # Q6
 def merge(lst1, lst2):
@@ -73,5 +76,5 @@ def squares(seq):
     []
     """
     "*** YOUR CODE HERE ***"
-    return ______
+    return [n for n in seq if is_square(n)]
 

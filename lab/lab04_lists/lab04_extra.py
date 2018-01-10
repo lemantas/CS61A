@@ -8,6 +8,13 @@ def reverse_iter(lst):
     [4, 3, 2, 1]
     """
     "*** YOUR CODE HERE ***"
+    # O well... I just wanted to use this: return lst[::-1]
+    i = len(lst) - 1
+    t = list()
+    while i >= 0:
+        t.append(lst[i])
+        i -= 1
+    return t
 
 # Q10
 def mergesort(seq):
