@@ -28,6 +28,11 @@ def mergesort(seq):
     [1]
     """
     "*** YOUR CODE HERE ***"
+    if len(seq) <= 1:
+        return seq
+    else:
+        half = int(len(seq) / 2)
+        return merge(mergesort(seq[:half]), mergesort(seq[half:]))
 
 # Q11
 def coords(fn, seq, lower, upper):
@@ -38,7 +43,7 @@ def coords(fn, seq, lower, upper):
     [[-2, 4], [1, 1], [3, 9]]
     """ 
     "*** YOUR CODE HERE ***"
-    return ______
+    return [[x, fn(x)] for x in seq if fn(x) >= lower and fn(x) <= upper]
 
 # Q12
 def deck(suits, numbers):
@@ -56,7 +61,7 @@ def deck(suits, numbers):
     []
     """
     "*** YOUR CODE HERE ***"
-    return ______
+    return [[s, n] for s in suits for n in numbers]
 
 # Q13
 def add_matrices(x, y):
@@ -69,5 +74,5 @@ def add_matrices(x, y):
     [[-2, 3], [3, 2]]
     """
     "*** YOUR CODE HERE ***"
-    return ______
+    return [[t1[0]+t2[0], t1[1]+t2[1]]for t1 in x for t2 in y if (t1 == x[0] and t2 == y[0]) or (t1 == x[1] and t2 == y[1])]
 

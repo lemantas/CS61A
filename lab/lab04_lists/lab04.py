@@ -34,7 +34,7 @@ def reverse_recursive(lst):
     [4, 3, 2, 1]
     """
     "*** YOUR CODE HERE ***"
-    if len(lst) <= 1:
+    if len(lst) == 1:
         return [lst[0]]
     else:
         return [lst[-1]] + reverse_recursive(lst[:-1])
@@ -53,9 +53,14 @@ def merge(lst1, lst2):
     [2, 4, 5, 6, 7]
     """
     "*** YOUR CODE HERE ***"
-    lst1.extend(lst2)
-    lst1.sort()
-    return lst1
+    if len(lst1) < 1:
+        return lst2
+    elif len(lst2) < 1:
+        return lst1
+    elif lst1[0] <= lst2[0]:
+        return [lst1[0]] + merge(lst1[1:], lst2)
+    elif lst2[0] < lst1[0]:
+        return [lst2[0]] + merge(lst1, lst2[1:])
     
 
 # Q8
