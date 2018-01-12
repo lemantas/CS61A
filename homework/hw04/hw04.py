@@ -1,14 +1,17 @@
 def interval(a, b):
     """Construct an interval from a to b."""
     "*** YOUR CODE HERE ***"
+    return [a, b]
 
 def lower_bound(x):
     """Return the lower bound of interval x."""
     "*** YOUR CODE HERE ***"
+    return x[0]
 
 def upper_bound(x):
     """Return the upper bound of interval x."""
     "*** YOUR CODE HERE ***"
+    return x[1]
 
 def str_interval(x):
     """Return a string representation of interval x.
@@ -52,6 +55,7 @@ def div_interval(x, y):
     '-0.25 to 0.5'
     """
     "*** YOUR CODE HERE ***"
+    assert upper_bound(y) != 0 and lower_bound(y) != 0, "Division by zero error"
     reciprocal_y = interval(1/upper_bound(y), 1/lower_bound(y))
     return mul_interval(x, reciprocal_y)
 
@@ -63,6 +67,8 @@ def sub_interval(x, y):
     '-9 to -2'
     """
     "*** YOUR CODE HERE ***"
+    negative_y = interval(-upper_bound(y), -lower_bound(y))
+    return add_interval(x, negative_y)
 
 def par1(r1, r2):
     return div_interval(mul_interval(r1, r2), add_interval(r1, r2))
