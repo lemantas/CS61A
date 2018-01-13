@@ -81,9 +81,15 @@ def par2(r1, r2):
 
 # These two intervals give different results for parallel resistors:
 "*** YOUR CODE HERE ***"
+i1 = interval(10, 20)
+i2 = interval(30, 100)
+assert par1(i1, i2) != par2(i1, i2), "The values must differ"
 
 def multiple_references_explanation():
-    return """The mulitple reference problem..."""
+    return """The mulitple reference problem occurs 
+            when par1 refers to r1 and r2 multiple times 
+            in mul_interval and add_interval functions
+            """
 
 def quadratic(x, a, b, c):
     """Return the interval that is the range of the quadratic defined by
@@ -95,6 +101,13 @@ def quadratic(x, a, b, c):
     '0 to 10'
     """
     "*** YOUR CODE HERE ***"
+    fn = lambda t: a*t*t + b*t + c
+    extreme = -b/2*a  
+    lower = min([fn(lower_bound(x)), fn(upper_bound(x))])
+    upper = fn(upper_bound(x))
+    if extreme > upper:
+        upper = fn(extreme)
+    return interval(lower, upper)
 
 def polynomial(x, c):
     """Return the interval that is the range of the polynomial defined by
