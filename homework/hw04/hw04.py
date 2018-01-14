@@ -88,7 +88,9 @@ assert par1(i1, i2) != par2(i1, i2), "The values must differ"
 def multiple_references_explanation():
     return """The mulitple reference problem occurs 
             when par1 refers to r1 and r2 multiple times 
-            in mul_interval and add_interval functions
+            in mul_interval and add_interval functions - 
+            interval is an inprecise alue and error bound increases 
+            along with the number of reference to it
             """
 
 def quadratic(x, a, b, c):
@@ -103,11 +105,14 @@ def quadratic(x, a, b, c):
     "*** YOUR CODE HERE ***"
     fn = lambda t: a*t*t + b*t + c
     extreme = -b/2*a  
-    lower = min([fn(lower_bound(x)), fn(upper_bound(x))])
-    upper = fn(upper_bound(x))
-    if extreme > upper:
-        upper = fn(extreme)
-    return interval(lower, upper)
+    lower_f = fn(lower_bound(x))
+    upper_f = fn(upper_bound(x))
+    extreme_f = fn(extreme)
+    if lower_bound(x) <= extreme and upper_bound(x) >= extreme:
+        return interval(min(lower_f, upper_f, extreme_f),
+                        max(lower_f, upper_f, extreme_f))
+    else:
+        return interval(min(lower_f, upper_f), max(lower_f, upper_f))
 
 def polynomial(x, c):
     """Return the interval that is the range of the polynomial defined by
@@ -121,6 +126,7 @@ def polynomial(x, c):
     '18.0 to 23.0'
     """
     "*** YOUR CODE HERE ***"
+    # Passed this out for later
 
 
 
