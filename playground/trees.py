@@ -56,4 +56,37 @@ def tree_max(t):
         else:
             return max([get_max(branch, n) for branch in branches(t)])
     return get_max(t, root(t))
+ 
         
+""" EXTRA QUESTIONS BELOW """
+
+# some helper funtions
+def reduce(fn, s, init):
+    reduced = init
+    for x in s:
+        reduced = fn(reduced, x)
+    return reduced
+
+def apply_to_all(fn, s):
+    return [fn(x) for x in s]
+    
+from operator import add, mul
+# I think this is not generalized enough, but let it be for now...
+def eval_tree(tree):
+    """Evaluates an expression tree with functions as root
+    >>> eval_tree(tree(1))
+    1
+    >>> expr = tree(mul, [tree(2), tree(3)])
+    >>> eval_tree(expr)
+    6
+    >>> eval_tree(tree(add, [expr, tree(4)]))
+    10
+    """
+    if is_leaf(tree):
+        return root(tree)
+    else:
+        fn = root(tree)
+        init = 0 if fn == add else 1
+        return reduce(fn, apply_to_all(eval_tree, branches(tree)), init)
+    
+
