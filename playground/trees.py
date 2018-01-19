@@ -89,4 +89,20 @@ def eval_tree(tree):
         init = 0 if fn == add else 1
         return reduce(fn, apply_to_all(eval_tree, branches(tree)), init)
     
-
+def hailstone_tree(n, h):
+    """Generates a tree of hailstone numbers that will reach N
+    , with height H.
+    >>> hailstone_tree(1, 0)
+    [1]
+    >>> hailstone_tree(1, 4)
+    [1, [2, [4, [8, [16]]]]]
+    >>> hailstone_tree(8, 3)
+    [8, [16, [32, [64]], [5, [10]]]]
+    """
+    if h == 0:
+        return tree(n)
+    else:
+        branches = [hailstone_tree(2 * n, h - 1)]
+        if ((n - 1) % 3 == 0) and (n not in [1, 4]):
+            branches.append(hailstone_tree((n - 1) // 3, h - 1))
+        return tree(n, branches)
