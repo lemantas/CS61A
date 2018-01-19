@@ -90,8 +90,7 @@ def eval_tree(tree):
         return reduce(fn, apply_to_all(eval_tree, branches(tree)), init)
     
 def hailstone_tree(n, h):
-    """Generates a tree of hailstone numbers that will reach N
-    , with height H.
+    """Generates a tree of hailstone numbers that will reach N with height H.
     >>> hailstone_tree(1, 0)
     [1]
     >>> hailstone_tree(1, 4)
@@ -106,3 +105,22 @@ def hailstone_tree(n, h):
         if ((n - 1) % 3 == 0) and (n not in [1, 4]):
             branches.append(hailstone_tree((n - 1) // 3, h - 1))
         return tree(n, branches)
+        
+def find_path(tree, x):
+    """ Return a path in a tree to a leaf with value X,
+    None if such a leaf is not present.
+    >>> t = tree(2, [tree(7, [tree(3), tree(6, [tree(5), tree (11)])]), tree(15)])
+    >>> find_path(t, 5)
+    [2, 7, 6, 5]
+    >>> find_path(t, 6)
+    [2, 7, 6]
+    >>> find_path(t, 10)
+    """
+    if root(tree) == x:
+        return [root(tree)]
+    else:
+        remaining_trees = branches(tree)
+        for path in [find_path(t, x) for t in remaining_trees]:
+            if path:
+                return [root(tree)] + path
+        
