@@ -86,6 +86,7 @@ def size_of_tree(t):
     7
     """
     "*** YOUR CODE HERE ***"
+    return 1 + sum([size_of_tree(branch) for branch in branches(t)])
 
 ################
 # Dictionaries #
