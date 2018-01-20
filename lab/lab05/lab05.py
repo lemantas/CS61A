@@ -112,4 +112,7 @@ def counter(message):
     """
     word_list = message.split()
     "*** YOUR CODE HERE ***"
-
+    d = dict()
+    for word in word_list:
+        d[word] = d.get(word, 0) + 1
+    return d

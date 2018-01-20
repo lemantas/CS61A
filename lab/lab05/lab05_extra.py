@@ -26,6 +26,9 @@ def height(t):
     2
     """
     "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        return 0
+    return 1 + max([height(branch) for branch in branches(t)])
 
 # Q6
 def acorn_finder(t):
@@ -39,7 +42,13 @@ def acorn_finder(t):
     False
     """
     "*** YOUR CODE HERE ***"
-
+    if root(t) == "acorn":
+        return True
+    for branch in branches(t):
+        if acorn_finder(branch) == True:
+            return True
+    return False
+    
 # Q7
 def preorder(t):
     """Return a list of the entries in this tree in the order that they
