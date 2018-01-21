@@ -60,6 +60,14 @@ def preorder(t):
     [2, 4, 6]
     """
     "*** YOUR CODE HERE ***"
+    members = []
+    def helper(t):
+        nonlocal members
+        members.append(root(t))
+        for branch in branches(t):
+            helper(branch)
+        return members
+    return helper(t)
 
 ################
 # Dictionaries #
@@ -86,7 +94,9 @@ def build_successors_table(tokens):
     for word in tokens:
         if prev not in table:
             "*** YOUR CODE HERE ***"
+            table[prev] = []
         "*** YOUR CODE HERE ***"
+        table[prev].append(word)
         prev = word
     return table
 
