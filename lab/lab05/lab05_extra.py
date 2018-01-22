@@ -109,10 +109,12 @@ def construct_sent(word, table):
     result = ' '
     while word not in ['.', '!', '?']:
         "*** YOUR CODE HERE ***"
+        result += "{} ".format(word)
+        word = random.choice(table[word])
     return result + word
 
 # Warning: do NOT try to print the return result of this function
-def shakespeare_tokens(path='shakespeare.txt', url='http://goo.gl/SztLfX'):
+def shakespeare_tokens(path='shakespeare.txt', url='https://ocw.mit.edu/ans7870/6/6.006/s08/lecturenotes/files/t8.shakespeare.txt'):
     """Return the words of Shakespeare's plays as a list."""
     import os
     from urllib.request import urlopen
