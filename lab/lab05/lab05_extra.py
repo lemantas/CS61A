@@ -89,15 +89,23 @@ def build_successors_table(tokens):
     >>> table['.']
     ['We']
     """
+    def store(prev, cur, table):
+        if prev not in table:
+            table[prev] = []
+        table[prev].append(cur)
+        
     table = {}
     prev = '.'
     for word in tokens:
-        if prev not in table:
-            "*** YOUR CODE HERE ***"
-            table[prev] = []
-        "*** YOUR CODE HERE ***"
-        table[prev].append(word)
-        prev = word
+        if word[-1] in ["!", "?", "."] and len(word) > 1:
+            symbol = word[-1]
+            word = word[:len(word)-1]
+            store(prev, word, table)
+            store(word, symbol, table)
+            prev = symbol
+        else:
+            store(prev, word, table)
+            prev = word
     return table
 
 # Q9
@@ -125,8 +133,8 @@ def shakespeare_tokens(path='shakespeare.txt', url='https://ocw.mit.edu/ans7870/
         return shakespeare.read().decode(encoding='ascii').split()
 
 # Uncomment the following two lines
-# tokens = shakespeare_tokens()
-# table = build_successors_table(tokens)
+tokens = shakespeare_tokens()
+table = build_successors_table(tokens)
 
 def random_sent():
     import random
