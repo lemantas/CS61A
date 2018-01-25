@@ -78,7 +78,16 @@ def make_joint(withdraw, old_password, new_password):
     "Your account is locked. Attempts: ['my', 'secret', 'password']"
     """
     "*** YOUR CODE HERE ***"
-
+    result = withdraw(0, old_password)
+    if type(result) == str:
+        return result
+    else:
+        def new_withdraw(amount, password):
+            if password == old_password or password == new_password:
+                return withdraw (amount, old_password)
+            return withdraw(amount, password)
+        return new_withdraw
+            
 class VendingMachine:
     """A vending machine that vends some product for some price.
 
@@ -105,6 +114,39 @@ class VendingMachine:
     'Machine is out of stock. Here is your $15.'
     """
     "*** YOUR CODE HERE ***"
+    def __init__(self, sweet, price):
+        self.sweet = sweet
+        self.price = price
+        self.stock = 0
+        self.balance = 0
+        
+    def vend(self):
+        if self.stock == 0:
+            return "Machine is out of stock."
+        elif self.balance < self.price:
+            more = self.price - self.balance
+            return "You must deposit ${} more.".format(more)
+        elif self.balance != 10:
+            self.balance -= self.price
+            change = self.balance
+            self.balance -= change
+            self.stock -= 1
+            return "Here is your {} and ${} change.".format(self.sweet, change)
+        elif self.balance == 10:
+            self.balance -= 10
+            self.stock -= 1
+            return "Here is your {}.".format(self.sweet)
+            
+    def restock(self, parcel):
+        self.stock += parcel
+        return "Current {} stock: {}".format(self.sweet, self.stock)
+        
+    def deposit(self, amount):
+        if self.stock == 0:
+            return "Machine is out of stock. Here is your ${}.".format(amount)
+        else:
+            self.balance += amount
+            return "Current balance: ${}".format(self.balance)
 
 class MissManners:
     """A container class that only forward messages that say please.
@@ -143,4 +185,20 @@ class MissManners:
     7
     """
     "*** YOUR CODE HERE ***"
+    def __init__(self, machine):
+        self.machine = machine
+        
+    def ask(self, request, *args):
+        request = request.split(" ")
+        first_word = request[0].lower()
+        if first_word != "please":
+            return "You must learn to say please first."
+        else:
+            try:
+                request = " ".join(request[1:])
+                command = getattr(self.machine, request)
+            except AttributeError:
+                return "Thanks for asking, but I know not how to {}".format(request)
+            return command(*args)
+
 
