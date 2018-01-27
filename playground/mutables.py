@@ -69,4 +69,22 @@ def replace_all_deep(d, x, y):
     >>> d
     {1: {2: 1, 3: 4}, 2: {4: 4, 5: 1}}
     """
-    pass     
+    for key in d.keys():
+        if type(d[key]) == dict:
+            replace_all_deep(d[key], x, y)
+        else:
+            if d[key] == x:
+                d[key] = y
+         
+def remove_all(d, x):
+    """
+    >>> d = {1:2, 2:3, 3:2, 4:3}
+    >>> remove_all(d, 2)
+    >>> d
+    {2: 3, 4: 3}
+    """
+    temp = dict(d)
+    for key in temp.keys():
+        if temp[key] == x:
+            del d[key]
+    del temp
