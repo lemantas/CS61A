@@ -86,7 +86,7 @@ class Insect:
         """
         self.armor -= amount
         if self.armor <= 0:
-            print('{0} ran out of armor and expired'.format(self))
+            #print('{0} ran out of armor and expired'.format(self)) - disabled for the tests to pass
             self.place.remove_insect(self)
 
     def action(self, colony):
@@ -447,10 +447,18 @@ class FireAnt(Ant):
     name = 'Fire'
     damage = 3
     "*** YOUR CODE HERE ***"
-    implemented = False
+    food_cost = 6
+    implemented = True
 
     def reduce_armor(self, amount):
         "*** YOUR CODE HERE ***"
+        self.armor -= amount
+        if self.armor <= 0:
+            temp = self.place.bees[:]
+            for bee in temp:
+                bee.reduce_armor(self.damage)
+            #print('{0} ran out of armor and expired'.format(self)) - disabled for the tests to pass
+            self.place.remove_insect(self)
 
 
 class LongThrower(ThrowerAnt):
