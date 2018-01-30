@@ -119,7 +119,7 @@ class Bee(Insect):
         """Return True if this Bee cannot advance to the next Place."""
         # Phase 3: Special handling for NinjaAnt
         "*** YOUR CODE HERE ***"
-        return self.place.ant is not None
+        return self.place.ant.blocks_path
 
     def action(self, colony):
         """A Bee's action stings the Ant that blocks its exit if it is blocked,
@@ -140,6 +140,7 @@ class Ant(Insect):
     implemented = False  # Only implemented Ant classes should be instantiated
     damage = 0
     food_cost = 0
+    blocks_path = True
 
     def __init__(self, armor=1):
         """Create an Ant with an armor quantity."""
@@ -449,7 +450,7 @@ class Water(Place):
     def add_insect(self, insect):
         """Add insect if it is watersafe, otherwise reduce its armor to 0."""
         "*** YOUR CODE HERE ***"
-        print('added', insect, insect.watersafe)
+        # print('added', insect, insect.watersafe) - disabled for the tests to work
         Place.add_insect(self, insect)
         if not insect.watersafe:
             insect.reduce_armor(insect.armor)
@@ -512,14 +513,24 @@ class NinjaAnt(Ant):
     name = 'Ninja'
     damage = 1
     "*** YOUR CODE HERE ***"
-    implemented = False
+    blocks_path = False
+    food_cost = 6
+    implemented = True
 
     def action(self, colony):
         "*** YOUR CODE HERE ***"
+        temp = self.place.bees[:]
+        for bee in temp:
+            bee.reduce_armor(self.damage)
 
 
 "*** YOUR CODE HERE ***"
 # The ScubaThrower class
+class ScubaThrower(ThrowerAnt):
+    name = "Scuba"
+    food_cost = 5
+    watersafe = True
+    implemented = True
 
 
 class HungryAnt(Ant):
@@ -528,9 +539,12 @@ class HungryAnt(Ant):
     """
     name = 'Hungry'
     "*** YOUR CODE HERE ***"
+    time_to_digest = 3
+    food_cost = 4
     implemented = False
 
     def __init__(self):
+        self.digesting = 0
         Ant.__init__(self)
         "*** YOUR CODE HERE ***"
 
@@ -539,6 +553,14 @@ class HungryAnt(Ant):
 
     def action(self, colony):
         "*** YOUR CODE HERE ***"
+        if self.digesting > 0:
+            self.digesting -= 1
+        else:
+            bees = self.place.bees
+            if len(bees) > 0:
+                bee = random.choice(bees)
+                bee.reduce_armor(bee.armor)
+                self.digesting = self.time_to_digest
 
 
 class BodyguardAnt(Ant):
