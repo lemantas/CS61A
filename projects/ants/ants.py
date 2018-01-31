@@ -42,6 +42,13 @@ class Place:
         if insect.is_ant:
             # Phase 4: Special handling for BodyguardAnt
             "*** YOUR CODE HERE ***"
+            if self.ant.can_contain(insect):
+                self.ant.ant = insect
+                #break
+            elif insect.can_contain(self.ant):
+                insect.ant = self.ant
+                self.ant = insect
+                 
             assert self.ant is None, 'Two ants in {0}'.format(self)
             self.ant = insect
         else:
@@ -54,6 +61,9 @@ class Place:
             assert self.ant == insect, '{0} is not in {1}'.format(insect, self)
             # Phase 4: Special handling for BodyguardAnt and QueenAnt
             "*** YOUR CODE HERE ***"
+            if self.ant.container and self.ant.ant:
+                self.ant = self.ant.ant
+                #break
             self.ant = None
         else:
             self.bees.remove(insect)
@@ -140,11 +150,19 @@ class Ant(Insect):
     implemented = False  # Only implemented Ant classes should be instantiated
     damage = 0
     food_cost = 0
+    container = False
     blocks_path = True
 
     def __init__(self, armor=1):
         """Create an Ant with an armor quantity."""
         Insect.__init__(self, armor)
+        
+    def can_contain(self, other):
+        if self.container:
+            if other.ant:
+                if not other.ant.container:
+                    return True
+        return False
 
 
 class HarvesterAnt(Ant):
@@ -567,7 +585,9 @@ class BodyguardAnt(Ant):
     """BodyguardAnt provides protection to other Ants."""
     name = 'Bodyguard'
     "*** YOUR CODE HERE ***"
-    implemented = False
+    food_cost = 4
+    container = True
+    implemented = True
 
     def __init__(self):
         Ant.__init__(self, 2)
@@ -575,9 +595,12 @@ class BodyguardAnt(Ant):
 
     def contain_ant(self, ant):
         "*** YOUR CODE HERE ***"
+        self.ant = ant
 
     def action(self, colony):
         "*** YOUR CODE HERE ***"
+        if self.ant:
+            self.ant.action(colony)
 
 class LaserAnt(ThrowerAnt):
     """
