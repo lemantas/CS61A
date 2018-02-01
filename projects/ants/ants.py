@@ -42,12 +42,16 @@ class Place:
         if insect.is_ant:
             # Phase 4: Special handling for BodyguardAnt
             "*** YOUR CODE HERE ***"
-            if self.ant.can_contain(insect):
-                self.ant.ant = insect
-                #break
-            elif insect.can_contain(self.ant):
-                insect.ant = self.ant
-                self.ant = insect
+            if self.ant:
+                if self.ant.can_contain(insect):
+                    self.ant.ant = insect
+                    insect.place = self
+                    return
+                elif insect.can_contain(self.ant):
+                    insect.ant = self.ant
+                    self.ant = insect
+                    insect.place = self
+                    return
                  
             assert self.ant is None, 'Two ants in {0}'.format(self)
             self.ant = insect
@@ -63,7 +67,8 @@ class Place:
             "*** YOUR CODE HERE ***"
             if self.ant.container and self.ant.ant:
                 self.ant = self.ant.ant
-                #break
+                insect.place = None
+                return
             self.ant = None
         else:
             self.bees.remove(insect)
@@ -159,8 +164,8 @@ class Ant(Insect):
         
     def can_contain(self, other):
         if self.container:
-            if other.ant:
-                if not other.ant.container:
+            if not self.ant:
+                if not other.container:
                     return True
         return False
 
