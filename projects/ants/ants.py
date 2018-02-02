@@ -625,17 +625,19 @@ class QueenPlace:
     """
     def __init__(self, colony_queen, ant_queen):
         "*** YOUR CODE HERE ***"
+        self.bees = []
 
     @property
     def bees(self):
         "*** YOUR CODE HERE ***"
 
 
-class QueenAnt:  # You should change this line
+class QueenAnt(ScubaThrower):  # You should change this line
     """The Queen of the colony.  The game is over if a bee enters her place."""
 
     name = 'Queen'
     "*** YOUR CODE HERE ***"
+    food_cost = 6
     implemented = False
 
     def __init__(self):
@@ -648,6 +650,7 @@ class QueenAnt:  # You should change this line
         Impostor queens do only one thing: reduce their own armor to 0.
         """
         "*** YOUR CODE HERE ***"
+        
 
 
 class AntRemover(Ant):
