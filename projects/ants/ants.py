@@ -134,7 +134,10 @@ class Bee(Insect):
         """Return True if this Bee cannot advance to the next Place."""
         # Phase 3: Special handling for NinjaAnt
         "*** YOUR CODE HERE ***"
-        return self.place.ant.blocks_path
+        if self.place.ant:
+            return self.place.ant.blocks_path
+        else:
+            return False
 
     def action(self, colony):
         """A Bee's action stings the Ant that blocks its exit if it is blocked,
@@ -615,7 +618,35 @@ class LaserAnt(ThrowerAnt):
     distance_weakening = 0.3
     insects_shot_weakening = 0.5
     "*** YOUR CODE HERE ***"
-    implemented = False
+    damage = 1.75
+    food_cost = 10
+    implemented = True
+    
+    def __init__(self, armor=1):
+        self.damage = LaserAnt.damage
+        Insect.__init__(self, armor)
+        
+    def action(self, colony):
+        # just shoot forward until the shot depletes or hits the end
+        def helper (place, hive):
+            if place == hive:
+                self.damage = LaserAnt.damage
+                return None
+            else:
+                if place.ant and place.ant != self:
+                    place.ant.reduce_armor(self.damage)
+                    self.damage -= self.insects_shot_weakening
+                elif place.bees:
+                    bee = random_or_none(place.bees)
+                    bee.reduce_armor(self.damage)
+                    self.damage -= self.insects_shot_weakening
+                self.damage -= self.distance_weakening
+                if self.damage <= 0:
+                    self.damage = LaserAnt.damage
+                    return None
+                else:
+                    helper(place.entrance, hive)
+        helper(self.place, colony.hive)
 
 class QueenPlace:
     """A place that represents both places in which the bees find the queen.
@@ -642,6 +673,7 @@ class QueenAnt(ScubaThrower):  # You should change this line
 
     def __init__(self):
         "*** YOUR CODE HERE ***"
+        self.buffed = []
 
     def action(self, colony):
         """A queen ant throws a leaf, but also doubles the damage of ants
@@ -650,6 +682,21 @@ class QueenAnt(ScubaThrower):  # You should change this line
         Impostor queens do only one thing: reduce their own armor to 0.
         """
         "*** YOUR CODE HERE ***"
+        # Change colony.queen to track bees in two places
+        colony.queen = QueenPlace(colony.queen, )
+        # Throw a leaf - normal action
+        ScubaThrower.action(self, colony)
+        # Buff every ant in line once - bonus action
+        def buff(place, colony):
+            if place == colony.queen or place == colony.hive:
+                return None
+            else:
+                if place.ant is not in self.buffed:
+                    place.ant.damage += place.ant.damge
+                    self.buffed.append(place.ant)
+                buff(place.exit, colony)
+                buff(place.entrance, colony)
+                
         
 
 
@@ -657,7 +704,7 @@ class AntRemover(Ant):
     """Allows the player to remove ants from the board in the GUI."""
 
     name = 'Remover'
-    implemented = False
+    implemented = True
 
     def __init__(self):
         Ant.__init__(self, 0)
