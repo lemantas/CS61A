@@ -65,6 +65,8 @@ class Place:
             assert self.ant == insect, '{0} is not in {1}'.format(insect, self)
             # Phase 4: Special handling for BodyguardAnt and QueenAnt
             "*** YOUR CODE HERE ***"
+            if insect is QueenAnt.true_queen:
+                return
             if self.ant.container and self.ant.ant:
                 self.ant = self.ant.ant
                 insect.place = None
@@ -656,11 +658,18 @@ class QueenPlace:
     """
     def __init__(self, colony_queen, ant_queen):
         "*** YOUR CODE HERE ***"
-        self.bees = []
-
+        self.colony_queen = colony_queen
+        self.ant_queen = ant_queen
+    
     @property
     def bees(self):
         "*** YOUR CODE HERE ***"
+        all_bees = []
+        for bee in self.colony_queen.bees:
+            all_bees.append(bee)
+        for bee in self.ant_queen.bees:
+            all_bees.append(bee)
+        return all_bees
 
 
 class QueenAnt(ScubaThrower):  # You should change this line
@@ -668,12 +677,16 @@ class QueenAnt(ScubaThrower):  # You should change this line
 
     name = 'Queen'
     "*** YOUR CODE HERE ***"
+    true_queen = None
     food_cost = 6
-    implemented = False
+    implemented = True
 
     def __init__(self):
         "*** YOUR CODE HERE ***"
+        Ant.__init__(self)
         self.buffed = []
+        if not QueenAnt.true_queen:
+            QueenAnt.true_queen = self
 
     def action(self, colony):
         """A queen ant throws a leaf, but also doubles the damage of ants
@@ -682,22 +695,29 @@ class QueenAnt(ScubaThrower):  # You should change this line
         Impostor queens do only one thing: reduce their own armor to 0.
         """
         "*** YOUR CODE HERE ***"
-        # Change colony.queen to track bees in two places
-        colony.queen = QueenPlace(colony.queen, )
-        # Throw a leaf - normal action
-        ScubaThrower.action(self, colony)
-        # Buff every ant in line once - bonus action
-        def buff(place, colony):
-            if place == colony.queen or place == colony.hive:
-                return None
-            else:
-                if place.ant is not in self.buffed:
-                    place.ant.damage += place.ant.damge
-                    self.buffed.append(place.ant)
-                buff(place.exit, colony)
-                buff(place.entrance, colony)
-                
-        
+        if self is not QueenAnt.true_queen:
+            self.reduce_armor(self.armor)
+        else:
+            # Change colony.queen to track bees in two places
+            colony.queen = QueenPlace(colony.queen, self.place)
+            # Throw a leaf - normal action
+            ScubaThrower.action(self, colony)
+            # Buff every ant in line once
+            def buff(place, colony, attribute):
+                if place == None:
+                    return None
+                else:
+                    if place.ant and place.ant is not self:
+                        if place.ant not in self.buffed:
+                            place.ant.damage += place.ant.damage
+                            self.buffed.append(place.ant)
+                        if place.ant.container and place.ant.ant not in self.buffed and place.ant.ant is not self:
+                            place.ant.ant.damage += place.ant.ant.damage
+                            self.buffed.append(place.ant.ant)
+                    buff(getattr(place, attribute), colony, attribute)
+                    
+            buff(self.place, colony, 'entrance')
+            buff(self.place, colony, 'exit')
 
 
 class AntRemover(Ant):
@@ -720,6 +740,10 @@ def make_slow(action):
     action -- An action method of some Bee
     """
     "*** YOUR CODE HERE ***"
+    def new_action(colony):
+        if colony.time % 2 == 0:
+            return action(colony)
+    return new_action
 
 def make_stun(action):
     """Return a new action method that does nothing.
@@ -727,18 +751,31 @@ def make_stun(action):
     action -- An action method of some Bee
     """
     "*** YOUR CODE HERE ***"
+    def new_action(colony):
+        pass
+    return new_action
 
 def apply_effect(effect, bee, duration):
     """Apply a status effect to a Bee that lasts for duration turns."""
     "*** YOUR CODE HERE ***"
-
+    usual = bee.action
+    temporary = effect(bee.action)
+    def helper(colony):
+        nonlocal duration
+        if duration <= 0:
+            usual(colony)
+        else:
+            duration -= 1
+            temporary(colony)
+                
+    bee.action = helper
 
 class SlowThrower(ThrowerAnt):
     """ThrowerAnt that causes Slow on Bees."""
 
     name = 'Slow'
     "*** YOUR CODE HERE ***"
-    implemented = False
+    implemented = True
 
     def throw_at(self, target):
         if target:
@@ -750,7 +787,8 @@ class StunThrower(ThrowerAnt):
 
     name = 'Stun'
     "*** YOUR CODE HERE ***"
-    implemented = False
+    food_cost = 6
+    implemented = True
 
     def throw_at(self, target):
         if target:
