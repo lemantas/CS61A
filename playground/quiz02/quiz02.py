@@ -30,6 +30,15 @@ def make_change(amount, coins):
     smallest = min(coins)
     rest = remove_one(coins, smallest)
     "*** YOUR CODE HERE ***"
+    if smallest == amount:
+        return [smallest]
+    result = make_change(amount - smallest, rest)
+    if result:
+        return [smallest] + result
+    else:
+        return make_change(amount, rest)
+            
+            
 
 def remove_one(coins, coin):
     """Remove one coin from a dictionary of coins. Return a new dictionary,
