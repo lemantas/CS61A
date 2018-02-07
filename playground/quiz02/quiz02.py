@@ -25,18 +25,20 @@ def make_change(amount, coins):
     >>> make_change(25, coins)
     [2, 2, 4, 4, 5, 8]
     """
+    if amount == 0:
+        return []
     if not coins:
+        return None
+    if amount < 0:
         return None
     smallest = min(coins)
     rest = remove_one(coins, smallest)
-    "*** YOUR CODE HERE ***"
-    if smallest == amount:
-        return [smallest]
-    result = make_change(amount - smallest, rest)
-    if result:
-        return [smallest] + result
-    else:
-        return make_change(amount, rest)
+    use_coin = make_change(amount - smallest, rest)
+    if use_coin != None:
+        return [smallest] + use_coin
+    forget_coin = make_change(amount, rest)
+    if forget_coin != None:
+        return forget_coin
             
             
 
@@ -130,8 +132,17 @@ class ChangeMachine:
     """
     def __init__(self, pennies):
         self.coins = {1: pennies}
+        self.max = pennies
 
     def change(self, coin):
         """Return change for coin, removing the result from self.coins."""
         "*** YOUR CODE HERE ***"
-
+        if coin > self.max:
+            return [coin]
+        self.coins[coin] = self.coins.get(coin, 0) + 1
+        change = make_change(coin, self.coins) 
+        for c in change:
+            self.coins[c] -= 1
+            if self.coins[c] == 0:
+                del self.coins[c]
+        return change
