@@ -71,18 +71,34 @@ class Keyboard:
 
     def __init__(self, *args):
         "*** YOUR CODE HERE ***"
+        self.buttons = {}
+        for arg in args:
+            self.buttons[arg.pos] = arg
 
     def press(self, info):
         """Takes in a position of the button pressed, and
         returns that button's output"""
         "*** YOUR CODE HERE ***"
+        self.buttons[info].pressed += 1
+        return self.buttons[info].key
 
     def typing(self, typing_input):
         """Takes in a list of positions of buttons pressed, and
         returns the total output"""
         "*** YOUR CODE HERE ***"
+        text = ""
+        for pos in typing_input:
+            text += self.press(pos)
+        return text
 
 class Button:
+    """A button for keyboard class
+    >>> b = Button(5, "E")
+    >>> b.pos == 5
+    True
+    >>> b.key
+    'E'
+    """
     def __init__(self, pos, key):
         self.pos = pos
         self.key = key
