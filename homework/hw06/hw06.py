@@ -46,7 +46,13 @@ def deep_map(f, s):
     """
     "*** YOUR CODE HERE ***"
     if len(s.rest) == 0:
-        return Link(f(s.first))
+        if isinstance(s.first, Link):
+            return Link(deep_map(f, s.first))
+        else:
+            return Link(f(s.first))
+    elif isinstance(s.first, Link):
+        inclusive = deep_map(f, s.first)
+        return Link(inclusive, deep_map(f, s.rest))
     else:
         return Link(f(s.first), deep_map(f, s.rest))
 
