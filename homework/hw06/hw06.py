@@ -66,6 +66,15 @@ def reverse(s):
     Link(3, Link(5, Link(4, Link(6))))
     """
     "*** YOUR CODE HERE ***"
+    if len(s.rest) == 0:
+        return s.first
+    else:
+        return Link(reverse(s.rest), Link(s.first))
+    
+        #rest = Link(s.first, reverse(s.rest))
+        #return Link(last_digit, Link(rest))
+                
+        
 
 def has_cycle(s):
     """Return whether Link s contains a cycle.
