@@ -150,10 +150,14 @@ class Mobile:
     def weight(self):
         """The total weight of the mobile."""
         "*** YOUR CODE HERE ***"
+        return self.left.contents.weight + self.right.contents.weight
 
     def is_balanced(self):
         """True if and only if the mobile is balanced."""
         "*** YOUR CODE HERE ***"
+        is_balanced = self.left.torque == self.right.torque
+        left, right = self.left.contents, self.right.contents
+        return is_balanced and left.is_balanced() and right.is_balanced()
 
 class Branch:
     """A branch of a binary mobile."""
