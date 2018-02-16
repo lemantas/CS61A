@@ -109,6 +109,9 @@ def cumulative_sum(t):
     Tree(1)
     """
     "*** YOUR CODE HERE ***"
+    branches = [cumulative_sum(branch) for branch in t.branches]
+    new_entry = sum([branch.entry for branch in branches]) + t.entry
+    return Tree(new_entry, branches)
 
 def same_shape(t1, t2):
     """Returns whether two Trees t1, t2 have the same shape. Two trees have the
