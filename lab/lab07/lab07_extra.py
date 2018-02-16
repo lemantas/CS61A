@@ -89,9 +89,11 @@ def leaves(t):
     if t.is_leaf():
         return [t.entry]
     else:
-        leaves = [branch for branch in t.branches if branch.is_leaf()]
-        return leaves + [leaves(branch) for branch in t.branches if not branch.is_leaf()]
-    
+        results = []
+        for branch in t.branches:
+            results = results + leaves(branch)
+        return results
+
 
 def cumulative_sum(t):
     """Return a new Tree, where each entry is the sum of all entries in the
