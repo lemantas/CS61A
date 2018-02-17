@@ -131,6 +131,11 @@ def same_shape(t1, t2):
     True
     """
     "*** YOUR CODE HERE ***"
+    if len(t1.branches) != len(t2.branches):
+        return False
+    else:
+        [same_shape(b1, b2) for b1, b2 in zip(t1.branches, t2.branches)]
+        return True
 
 
 # Folding Linked Lists
@@ -149,8 +154,8 @@ def foldl(link, fn, z):
     """
     if link is Link.empty:
         return z
-    "*** YOUR CODE HERE ***"
-    return foldl(______, ______, ______)
+    else:
+        return fn(foldl(link.rest, fn, z), link.first)
 
 def foldr(link, fn, z):
     """ Right fold
@@ -163,6 +168,10 @@ def foldr(link, fn, z):
     6
     """
     "*** YOUR CODE HERE ***"
+    if link is Link.empty:
+        return z
+    else:
+        return fn(link.first, foldr(link.rest, fn, z))
 
 identity = lambda x: x
 
@@ -177,6 +186,6 @@ def foldl2(link, fn, z):
     6
     """
     def step(x, g):
-        "*** YOUR CODE HERE ***"
+        return lambda a: g(fn(a, x))
     return foldr(link, step, identity)(z)
 
