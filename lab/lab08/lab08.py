@@ -45,11 +45,11 @@ def slice_link(link, start, end):
     """
     "*** YOUR CODE HERE ***"
     if start > 0:
-        return slice_link(link.rest, start-1, end)
+        return slice_link(link.rest, start-1, end-1)
     elif end == 0:
-        return Link(link.first)
+        return Link.empty
     else:
-        return Link(link.entry, slice_link(link.rest, start, end-1))
+        return Link(link.first, slice_link(link.rest, start, end-1))
 
 
 # Sets
@@ -66,6 +66,12 @@ def union(s1, s2):
     {0, 1, 2, 3, 4, 6}
     """
     "*** YOUR CODE HERE ***"
+    new_set = set()
+    for e in s1:
+        new_set.add(e)
+    for e in s2:
+        new_set.add(e)
+    return new_set
 
 def intersection(s1, s2):
     """Returns the intersection of two sets.
@@ -79,6 +85,11 @@ def intersection(s1, s2):
     {4}
     """
     "*** YOUR CODE HERE ***"
+    new_set = set()
+    for e in s1:
+        if e in s2:
+            new_set.add(e)
+    return new_set
 
 def extra_elem(a,b):
     """B contains every element in A, and has one additional member, find
@@ -90,6 +101,7 @@ def extra_elem(a,b):
     6
     """
     "*** YOUR CODE HERE ***"
+    return list(set(b) - set(a))[0]
 
 def find_duplicates(lst):
     """Returns True if lst has any duplicates and False if it does not.
@@ -100,5 +112,5 @@ def find_duplicates(lst):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    return len(set(lst)) != len(lst)
 
