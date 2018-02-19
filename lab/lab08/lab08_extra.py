@@ -15,6 +15,17 @@ def add_up(n, lst):
     False
     """
     "*** YOUR CODE HERE ***"
+    uniques = set(lst)
+    
+    for member in uniques:
+        other_num = n - member
+        if other_num != member and other_num in uniques:
+            return True
+    return False
+
+# pow with O(log n) efficiency
+def square(x):
+    return x * x
 
 def pow(n,k):
     """Computes n^k.
@@ -25,6 +36,12 @@ def pow(n,k):
     16
     """
     "*** YOUR CODE HERE ***"
+    if k == 0:
+        return 1
+    elif k % 2 == 0:
+        return square(pow(n, k//2))
+    else:
+        return n * pow(n, k-1)
 
 def missing_no(lst):
     """lst contains all the numbers from 1 to n for some n except some
