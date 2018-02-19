@@ -53,6 +53,10 @@ def missing_no(lst):
     293
     """
     "*** YOUR CODE HERE ***"
+    # full_set = set(range(max(lst)))
+    # return list(full_set.difference(set(lst)))[0]
+    # well, course's implementation is more elegant:
+    return sum(range(max(lst) + 1)) - sum(lst)
 
 def find_duplicates_k(k, lst):
     """Returns True if there are any duplicates in lst that are within k
@@ -64,6 +68,13 @@ def find_duplicates_k(k, lst):
     True
     """
     "*** YOUR CODE HERE ***"
+    x, end = 0, len(lst) - 1
+    while k <= end:
+        if lst[x] == lst[k]:
+            return True
+        x += 1
+        k += 1
+    return False
 
 
 
