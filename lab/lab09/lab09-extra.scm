@@ -25,6 +25,7 @@
 (define (accumulate combiner start n term)
   (if (= n 0)
       start
-      'YOUR-CODE-HERE
+      (combiner (accumulate combiner start (- n 1) term)
+                (term n))
       ))
 
