@@ -3,29 +3,34 @@
 
 (define (cadr s)
   ; YOUR-CODE-HERE
-  nil
+  (car (cdr s))
 )
 
 (define (caddr s)
   ; YOUR-CODE-HERE
-  nil
+  (car (cdr (cdr s)))
 )
 
 (define (sign x)
   ; YOUR-CODE-HERE
-  nil
+  (cond ((> x 0) 1)
+        ((< x 0) -1)
+        (else x))
 )
 
 (define (square x) (* x x))
 
 (define (pow b n)
-  ; YOUR-CODE-HERE
-  nil
+  (cond ((= n 0) 1)
+        ((even? n) (square (pow b (/ n 2))))
+        (else (* b (pow b (- n 1)))))
 )
 
 (define (ordered? s)
   ; YOUR-CODE-HERE
-  nil
+  (cond ((equal? (cdr s) nil) True)
+        ((> (car s) (car (cdr s))) False))
+        (else (ordered? (cdr s))))
 )
 
 (define (nodots s)
