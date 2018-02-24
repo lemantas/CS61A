@@ -48,7 +48,9 @@
 (define (contains? s v)
     (cond ((empty? s) false)
           ; YOUR-CODE-HERE
-          (else nil)
+          ((> (car s) v) false)
+          ((equal? (car s) v) true)
+          (else (contains? (cdr s) v))
           ))
 
 ; Equivalent Python code, for your reference:
@@ -69,13 +71,18 @@
 (define (add s v)
     (cond ((empty? s) (list v))
           ; YOUR-CODE-HERE
-          (else nil)
+          ((= (car s) v) s)
+          ((> (car s) v) (cons v s))
+          (else (cons (car s) (add (cdr s) v)))
           ))
 
 (define (intersect s t)
     (cond ((or (empty? s) (empty? t)) nil)
           ; YOUR-CODE-HERE
-          (else nil)
+          ((equal? (car s) (car t)) 
+            (cons (car s) (intersect (cdr s) (cdr t))))
+          ((> (car s) (car t)) (intersect s (cdr t)))
+          ((< (car s) (car t)) (intersect (cdr s) t))
           ))
 
 ; Equivalent Python code, for your reference:
@@ -95,8 +102,9 @@
 (define (union s t)
     (cond ((empty? s) t)
           ((empty? t) s)
-          ; YOUR-CODE-HERE
-          (else nil)
+          ((= (car s) (car t)) (cons (car s) (union (cdr s) (cdr t))))
+          ((< (car s) (car t)) (cons (car s) (union (cdr s) t)))
+          ((> (car s) (car t)) (cons (car t) (union s (cdr t))))
           ))
 
 
@@ -112,8 +120,9 @@
 
 (define (in? t v)
     (cond ((empty? t) false)
-          ; YOUR-CODE-HERE
-          (else nil)
+          ((equal? (entry t) v) true)
+          ((< v (entry t)) (in? (left t) v))
+          ((> v (entry t)) (in? (right t) v))
           ))
 
 ; Equivalent Python code, for your reference:
@@ -130,6 +139,10 @@
 
 (define (as-list t)
     ; YOUR-CODE-HERE
-    (else nil)
+    (cond ((empty? t) nil)
+          ((empty? (left t)) (entry t))
+          ((empty? (right t)) (cons (entry t) nil))
+          (else (cons (as-list (left t)) (as-list (right t))))
+          )
     )
 
