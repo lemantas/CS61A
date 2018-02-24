@@ -29,13 +29,16 @@
 (define (ordered? s)
   ; YOUR-CODE-HERE
   (cond ((equal? (cdr s) nil) True)
-        ((> (car s) (car (cdr s))) False))
+        ((> (car s) (car (cdr s))) False)
         (else (ordered? (cdr s))))
 )
 
 (define (nodots s)
   ; YOUR-CODE-HERE
-  nil
+  (cond ((equal? s nil) nil)
+        ((number? s) (cons s nil))
+        ((not (number? (car s))) (cons (nodots (car s)) (nodots (cdr s))))
+        (else (cons (car s) (nodots (cdr s)))))
 )
 
 ; Sets as sorted lists
