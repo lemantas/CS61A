@@ -13,8 +13,11 @@
       (if (f (car s)) (cons (car s) rest) rest))))
 
 (define (no-repeats s)
-  ; YOUR-CODE-HERE
-  'replace-this)
+  (cond ((equal? s nil) nil)
+        ;((equal? (filter (lambda (x) (not (equal? (car s))) (cdr s))) nil) nil)
+        (else (cons (car s) (no-repeats 
+            (filter (lambda (x) (not (equal? (car s))) (cdr s))))))
+  ))
 
 (define (how-many-dots s)
   ; YOUR-CODE-HERE
