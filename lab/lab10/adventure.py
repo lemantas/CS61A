@@ -43,11 +43,13 @@ def adv_parse(line):
     token = tokens.pop(0) # https://docs.python.org/3/tutorial/datastructures.html
     if token == 'give':
         "*** YOUR CODE HERE ***"
+        return (token, ' '.join(tokens[0:2]), tokens[-1])
     elif token == 'ask':
         "*** YOUR CODE HERE ***"
+        return (token, tokens[0], ' '.join(tokens[2:]))
     else: # Only split out the operator, the rest must be the operand
         "*** YOUR CODE HERE ***"
-
+        return (token, ' '.join(tokens))
 
 def adv_eval(exp):
     """
