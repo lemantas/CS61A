@@ -1,6 +1,6 @@
 # A "simple" adventure game.
 
-name = 'Player 1' # Can replace this with your name. :)
+name = 'Mantas' # Can replace this with your name. :)
 me = None # Will be initalized to Person(name) after Person class is defined
 
 def adventure():
@@ -81,6 +81,8 @@ def adv_eval(exp):
         "*** YOUR CODE HERE ***"
         if is_operator(exp[0]):
             return adv_apply(exp[0], exp[1])
+        else:
+            return "Sorry..?"
 
 
 def adv_apply(operator, operand):
@@ -99,9 +101,17 @@ def check_win_conditions():
 
 def is_operator(exp):
     "*** YOUR CODE HERE ***"
-    return exp in ('look', 'go', 'take', 'give', 'ask', 'examine', 'help')
+    return exp in ('look', 'go', 'take', 'give', 'ask', 'examine', 'help', 'stuff')
 
 "*** YOUR CODE HERE ***"
+def stuff(_):
+    print("You look through your stuff... you see")
+    if not me.inventory:
+        return "Nottin..."
+    examined = ""
+    for thing in me.inventory:
+        examined += thing + " - " + examine(thing.name) + "\n"
+    return examined
 
 def look(_):
     return Place.current.look()
@@ -248,4 +258,3 @@ if __name__ == '__main__':
         print("ERROR: Could not load world. Did you forget to provide it?")
         print("\tExample: python3 adventure.py cs61as_world")
         print(e)
-
