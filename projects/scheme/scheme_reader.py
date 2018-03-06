@@ -169,8 +169,15 @@ def read_tail(src):
             return nil
         elif src.current() == ".":
             "*** YOUR CODE HERE ***"
-            next = src.pop()
-            if next == "(":
+            src.pop()
+            if src.current() == ")":
+                src.pop()
+                return nil
+            elif src.current() =="(":
+                return read_tail(src)
+            elif src.current() ==".":
+                raise SyntaxError("unexpected end of file")
+            else:
                 return scheme_read(src)
         else:
             first = scheme_read(src)
