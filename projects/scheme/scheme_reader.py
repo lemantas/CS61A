@@ -170,15 +170,12 @@ def read_tail(src):
         elif src.current() == ".":
             "*** YOUR CODE HERE ***"
             src.pop()
-            if src.current() == ")":
-                src.pop()
-                return nil
-            elif src.current() =="(":
-                return read_tail(src)
-            elif src.current() ==".":
-                raise SyntaxError("unexpected end of file")
+            result = scheme_read(src)
+            if src.pop() == ")":
+                return result
             else:
-                return scheme_read(src)
+                raise SyntaxError("unexpected end of file")
+
         else:
             first = scheme_read(src)
             rest = read_tail(src)
