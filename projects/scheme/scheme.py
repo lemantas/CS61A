@@ -54,7 +54,7 @@ def eval_all(expressions, env):
     """Evaluate a Scheme list of EXPRESSIONS & return the value of the last."""
     "*** YOUR CODE HERE ***"
     return scheme_eval(expressions.first, env)
-
+    
 def apply_primitive(procedure, args_scheme_list, env):
     """Apply PrimitiveProcedure PROCEDURE to ARGS_SCHEME_LIST in ENV.
 
@@ -66,6 +66,12 @@ def apply_primitive(procedure, args_scheme_list, env):
     """
     args = list(args_scheme_list) # Convert a Scheme list to a Python list
     "*** YOUR CODE HERE ***"
+    if procedure.use_env:
+        args.append(env)
+    try:
+        return procedure.fn(*args)
+    except TypeError:
+        raise SchemeError
 
 def make_call_frame(procedure, args, env):
     """Make a frame that binds the formal parameters of PROCEDURE to ARGS."""
@@ -100,7 +106,7 @@ class Frame:
         else:
             return self.parent.lookup(symbol)
 
-    def make_child_frame(self, formals, vals):
+    def make_child_frame(self, formals, vals):  
         """Return a new local frame whose parent is SELF, in which the symbols
         in a Scheme list of formal parameters FORMALS are bound to the Scheme
         values in the Scheme list VALS. Raise an error if too many or too few
@@ -152,8 +158,11 @@ def do_define_form(expressions, env):
     if scheme_symbolp(target):
         check_form(expressions, 2, 2)
         "*** YOUR CODE HERE ***"
+        env.define(target,scheme_eval(expressions[1], env))
+        return target
     elif isinstance(target, Pair) and scheme_symbolp(target.first):
         "*** YOUR CODE HERE ***"
+        
     else:
         bad = target.first if isinstance(target, Pair) else target
         raise SchemeError("Non-symbol: {}".format(bad))
