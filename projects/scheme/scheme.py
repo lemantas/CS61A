@@ -53,7 +53,12 @@ def scheme_apply(procedure, args, env):
 def eval_all(expressions, env):
     """Evaluate a Scheme list of EXPRESSIONS & return the value of the last."""
     "*** YOUR CODE HERE ***"
-    return scheme_eval(expressions.first, env)
+    if expressions == nil:
+        return okay
+    elif expressions.second == nil:
+        return scheme_eval(expressions.first, env)
+    scheme_eval(expressions.first, env)
+    return scheme_eval(expressions.second.first, env)
     
 def apply_primitive(procedure, args_scheme_list, env):
     """Apply PrimitiveProcedure PROCEDURE to ARGS_SCHEME_LIST in ENV.
@@ -119,6 +124,10 @@ class Frame:
         """
         frame = Frame(self) # Create a new frame with self as the parent
         "*** YOUR CODE HERE ***"
+        if len(formals) != len(vals):
+            raise SchemeError
+        for formal, val in zip(formals, vals):
+            frame.define(formal, val)
         return frame
 
     def define(self, symbol, value):
@@ -158,11 +167,13 @@ def do_define_form(expressions, env):
     if scheme_symbolp(target):
         check_form(expressions, 2, 2)
         "*** YOUR CODE HERE ***"
-        env.define(target,scheme_eval(expressions[1], env))
+        env.define(taret, scheme_eval(expressions[1], env))
         return target
     elif isinstance(target, Pair) and scheme_symbolp(target.first):
         "*** YOUR CODE HERE ***"
-        
+        body = Pair(target.second, expressions.second)
+        env.define(target.first, do_lambda_form(body, env))
+        return target.first
     else:
         bad = target.first if isinstance(target, Pair) else target
         raise SchemeError("Non-symbol: {}".format(bad))
@@ -171,6 +182,7 @@ def do_quote_form(expressions, env):
     """Evaluate a quote form."""
     check_form(expressions, 1, 1)
     "*** YOUR CODE HERE ***"
+    return expressions[0]
 
 def do_begin_form(expressions, env):
     """Evaluate begin form."""
@@ -183,6 +195,7 @@ def do_lambda_form(expressions, env):
     formals = expressions.first
     check_formals(formals)
     "*** YOUR CODE HERE ***"
+    return LambdaProcedure(formals, expressions.second, env)
 
 def do_if_form(expressions, env):
     """Evaluate an if form."""
