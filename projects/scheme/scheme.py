@@ -55,10 +55,10 @@ def eval_all(expressions, env):
     "*** YOUR CODE HERE ***"
     if expressions == nil:
         return okay
-    elif expressions.second == nil:
-        return scheme_eval(expressions.first, env)
-    scheme_eval(expressions.first, env)
-    return scheme_eval(expressions.second.first, env)
+    last = None
+    for expression in expressions:
+        last = scheme_eval(expression, env)
+    return last
     
 def apply_primitive(procedure, args_scheme_list, env):
     """Apply PrimitiveProcedure PROCEDURE to ARGS_SCHEME_LIST in ENV.
@@ -81,6 +81,7 @@ def apply_primitive(procedure, args_scheme_list, env):
 def make_call_frame(procedure, args, env):
     """Make a frame that binds the formal parameters of PROCEDURE to ARGS."""
     "*** YOUR CODE HERE ***"
+    return procedure.env.make_child_frame(procedure.formals, args)
 
 ################
 # Environments #
@@ -167,7 +168,7 @@ def do_define_form(expressions, env):
     if scheme_symbolp(target):
         check_form(expressions, 2, 2)
         "*** YOUR CODE HERE ***"
-        env.define(taret, scheme_eval(expressions[1], env))
+        env.define(target, scheme_eval(expressions[1], env))
         return target
     elif isinstance(target, Pair) and scheme_symbolp(target.first):
         "*** YOUR CODE HERE ***"
@@ -201,14 +202,47 @@ def do_if_form(expressions, env):
     """Evaluate an if form."""
     check_form(expressions, 2, 3)
     "*** YOUR CODE HERE ***"
+    evaluated = scheme_eval(expressions.first, env)
+    if scheme_true(evaluated):
+        return scheme_eval(expressions.second.first, env)
+        #return scheme_eval(Pair(expressions.second.first, nil), env)
+    else:
+        if len(expressions) == 2:
+            return okay
+        else:
+            return scheme_eval(expressions.second.second.first, env)
+            #return scheme_eval(Pair(expressions.second.second, nil), env)
 
 def do_and_form(expressions, env):
     """Evaluate a short-circuited and form."""
     "*** YOUR CODE HERE ***"
+    # no expressions are given
+    if expressions == nil:
+        return True
+      
+    evaled = scheme_eval(expressions.first, env)
+    if expressions.second == nil:
+        if scheme_true(evaled):
+            return evaled
+        else:
+            return False
+    elif scheme_false(evaled):
+        return False
+    else:
+        return do_and_form(expressions.second, env)
 
 def do_or_form(expressions, env):
     """Evaluate a short-circuited or form."""
     "*** YOUR CODE HERE ***"
+    # no expressions are given
+    if expressions == nil:
+        return False
+      
+    evaled = scheme_eval(expressions.first, env)
+    if scheme_true(evaled):
+        return evaled
+    else:
+        return do_or_form(expressions.second, env)
 
 def do_cond_form(expressions, env):
     """Evaluate a cond form."""
@@ -225,19 +259,33 @@ def do_cond_form(expressions, env):
             test = scheme_eval(clause.first, env)
         if scheme_true(test):
             "*** YOUR CODE HERE ***"
+            if len(clause.second) > 1:
+                return eval_all(clause.second, env)
+            elif len(clause.second) == 0:
+                return test
+            else:
+                return scheme_eval(clause.second.first, env)
     return okay
 
 def do_let_form(expressions, env):
     """Evaluate a let form."""
     check_form(expressions, 2)
     let_env = make_let_frame(expressions.first, env)
-    return eval_all(expressions.second, let_env)
+    return eval_all(expressions.second.first, let_env)
 
 def make_let_frame(bindings, env):
     """Create a frame containing bindings from a let expression."""
     if not scheme_listp(bindings):
         raise SchemeError("bad bindings list in let form")
     "*** YOUR CODE HERE ***"
+    #print('bindings:', bindings)
+    formals, vals = [], []
+    for bind in bindings:
+        check_form(bind, 2)
+        formals.append(bind.first)
+        vals.append(scheme_eval(bind.second.first, env))
+    #print('output:', formals, vals)
+    return env.make_child_frame(formals, vals)
 
 SPECIAL_FORMS = {
     "and": do_and_form,
@@ -272,6 +320,17 @@ def check_formals(formals):
     >>> check_formals(read_line("(a b c)"))
     """
     "*** YOUR CODE HERE ***"
+    def helper(formals, checked_items=[]):
+        if formals == nil:
+            return
+        elif not scheme_symbolp(formals.first):
+            raise SchemeError
+        elif formals.first in checked_items:
+            raise SchemeError
+        else:
+            checked_items.append(formals.first)
+            return helper(formals.second, checked_items)
+    helper(formals)
 
 #################
 # Dynamic Scope #
