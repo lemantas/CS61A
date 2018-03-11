@@ -271,7 +271,11 @@ def do_let_form(expressions, env):
     """Evaluate a let form."""
     check_form(expressions, 2)
     let_env = make_let_frame(expressions.first, env)
-    return eval_all(expressions.second.first, let_env)
+    #print(expressions.second.first)
+    if len(expressions.second) > 1:
+        return eval_all(expressions.second, let_env)
+    else:
+        return scheme_eval(expressions.second.first, let_env)
 
 def make_let_frame(bindings, env):
     """Create a frame containing bindings from a let expression."""
@@ -281,7 +285,7 @@ def make_let_frame(bindings, env):
     #print('bindings:', bindings)
     formals, vals = [], []
     for bind in bindings:
-        check_form(bind, 2)
+        check_form(bind, 2, 2)
         formals.append(bind.first)
         vals.append(scheme_eval(bind.second.first, env))
     #print('output:', formals, vals)
