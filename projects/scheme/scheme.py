@@ -271,7 +271,6 @@ def do_let_form(expressions, env):
     """Evaluate a let form."""
     check_form(expressions, 2)
     let_env = make_let_frame(expressions.first, env)
-    #print(expressions.second.first)
     if len(expressions.second) > 1:
         return eval_all(expressions.second, let_env)
     else:
@@ -282,13 +281,13 @@ def make_let_frame(bindings, env):
     if not scheme_listp(bindings):
         raise SchemeError("bad bindings list in let form")
     "*** YOUR CODE HERE ***"
-    #print('bindings:', bindings)
     formals, vals = [], []
     for bind in bindings:
         check_form(bind, 2, 2)
+        if not scheme_symbolp(bind[0]):
+            raise SchemeError("binding name not a symbol")
         formals.append(bind.first)
         vals.append(scheme_eval(bind.second.first, env))
-    #print('output:', formals, vals)
     return env.make_child_frame(formals, vals)
 
 SPECIAL_FORMS = {
