@@ -201,7 +201,7 @@ circumference
 
 ((lambda (x y z) (+ x y (square z))) 1 2 3)
 ; expect 12
-(exit)
+
 (define (f x y)
   (let ((a (+ 1 (* x y)))
         (b (- 1 y)))
@@ -223,7 +223,7 @@ circumference
 ; expect 21
 
 
-(exit)
+
 ;;; 2.1.1
 
 (define (add-rat x y)
