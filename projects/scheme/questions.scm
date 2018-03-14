@@ -16,9 +16,7 @@
 ; Problem 18
 ;; Turns a list of pairs into a pair of lists
 (define (zip pairs)
-  (cond ((null? pairs) nil)
-        (else (cons (caar pairs) (cons (cadar pairs) (zip (cdr pairs)))))
-  )
+  (list (apply-to-all car pairs) (apply-to-all cadr pairs))
 )
 
 (zip '((1 2) (3 4) (5 6)))
@@ -31,9 +29,30 @@
 ; Problem 19
 
 ;; List all ways to partition TOTAL without using consecutive numbers.
+(define (cdar x) (cdr (car x)))
+
+(define (partitions-r a b)
+  (if (= a 0) nil
+    (append (cons-all a (list-partitions b))
+            (cons-f (partitions-r (- a 1) (+ b 1))
+    ))
+  ))
+
+(define (cons-f lst)
+  (cond 
+        ((eq? lst nil) nil)
+        ((eq? (cdar lst) nil) lst)
+
+        ((< (caar lst) (cadar lst)) (cons-f (cdr lst)))
+        ((= (caar lst) (+ 1 (cadar lst))) (cons-f (cdr lst)))
+        (else (cons (car lst) (cons-f (cdr lst))))
+))
+
 (define (list-partitions total)
-  'YOUR-CODE-HERE
-  )
+  (cond ((= total 1) '((1)) )
+        ((= total 0) '(()) )
+        (else (append nil (partitions-r total 0)))
+))
 
 ; For these two tests, any permutation of the right answer will be accepted.
 (list-partitions 5)
