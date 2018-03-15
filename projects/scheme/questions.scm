@@ -31,28 +31,32 @@
 ;; List all ways to partition TOTAL without using consecutive numbers.
 (define (cdar x) (cdr (car x)))
 
-(define (partitions-r a b)
-  (if (= a 0) nil
-    (append (cons-all a (list-partitions b))
-            (cons-f (partitions-r (- a 1) (+ b 1))
-    ))
-  ))
-
-(define (cons-f lst)
-  (cond 
-        ((eq? lst nil) nil)
-        ((eq? (cdar lst) nil) lst)
-
-        ((< (caar lst) (cadar lst)) (cons-f (cdr lst)))
-        ((= (caar lst) (+ 1 (cadar lst))) (cons-f (cdr lst)))
-        (else (cons (car lst) (cons-f (cdr lst))))
-))
 
 (define (list-partitions total)
   (cond ((= total 1) '((1)) )
         ((= total 0) '(()) )
-        (else (append nil (partitions-r total 0)))
-))
+        (else (append nil (sub-partitions total 0)))
+  )
+)
+
+(define (sub-partitions a b)
+  (cond ((= a 0) nil)
+        (else (append (cons-all a (list-partitions b))
+              (consecutive (sub-partitions (- a 1) (+ b 1)))
+        )
+    )
+  )
+)
+
+(define (consecutive lst)
+  (cond 
+        ((equal? lst nil) nil)
+        ((equal? (cdar lst) nil) lst)
+        ((< (caar lst) (cadar lst)) (consecutive (cdr lst)))
+        ((= (caar lst) (+ 1 (cadar lst))) (consecutive (cdr lst)))
+        (else (cons (car lst) (consecutive (cdr lst))))
+  )
+)
 
 ; For these two tests, any permutation of the right answer will be accepted.
 (list-partitions 5)
