@@ -55,10 +55,17 @@ def eval_all(expressions, env):
     "*** YOUR CODE HERE ***"
     if expressions == nil:
         return okay
-    last = None
+    n = 0
+    #last = None
+    #for expression in expressions:
+    #    last = scheme_eval(expression, env)
+    #return last
     for expression in expressions:
-        last = scheme_eval(expression, env)
-    return last
+        n += 1
+        if n == len(expressions):
+            return scheme_optimized_eval(expression, env, True)
+        result = scheme_eval(expression, env)
+    return result
     
 def apply_primitive(procedure, args_scheme_list, env):
     """Apply PrimitiveProcedure PROCEDURE to ARGS_SCHEME_LIST in ENV.
@@ -84,7 +91,10 @@ def make_call_frame(procedure, args, env):
     if isinstance(procedure, MuProcedure):
         return env.make_child_frame(procedure.formals, args)
     else:
-        return procedure.env.make_child_frame(procedure.formals, args)
+        #return procedure.env.make_child_frame(procedure.formals, args)
+        environment = env.make_child_frame(procedure.formals, args)
+        environment.parent = procedure.env 
+        return environment
 
 ################
 # Environments #
@@ -400,6 +410,7 @@ def scheme_optimized_eval(expr, env, tail=False):
 
     if tail:
         "*** YOUR CODE HERE ***"
+        return Evaluate(expr, env)
     else:
         result = Evaluate(expr, env)
 
@@ -420,10 +431,10 @@ def scheme_optimized_eval(expr, env, tail=False):
 ################################################################
 # Uncomment the following line to apply tail call optimization #
 ################################################################
-# scheme_eval = scheme_optimized_eval
+scheme_eval = scheme_optimized_eval
 
 
-################
+################    
 # Input/Output #
 ################
 
