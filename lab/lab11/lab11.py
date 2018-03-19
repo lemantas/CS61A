@@ -26,17 +26,18 @@ class IteratorRestart:
         "*** YOUR CODE HERE ***"
         self.start = start
         self.end = end
-        self.point = start
+        self.pointer = start
     def __next__(self):
         "*** YOUR CODE HERE ***"
-        self.point += 1
-        if self.point > self.end:
+        if self.pointer > self.end:
             raise StopIteration
-        return self.point
+        self.pointer += 1
+        return self.pointer - 1
         
     def __iter__(self):
         "*** YOUR CODE HERE ***"
-        return IteratorRestart(self.start, self.end)
+        self.pointer = self.start
+        return self
 
 ##############
 # Generators #
@@ -55,6 +56,9 @@ def countdown(n):
     0
     """
     "*** YOUR CODE HERE ***"
+    while n >= 0:
+        yield n
+        n -= 1
 
 class Countdown:
     """
@@ -69,6 +73,13 @@ class Countdown:
     0
     """
     "*** YOUR CODE HERE ***"
+    def __init__(self, n):
+        self.n = n
+    
+    def __iter__(self):
+        while self.n >= 0:
+            yield self.n
+            self.n -= 1
 
 def hailstone(n):
     """
@@ -84,4 +95,10 @@ def hailstone(n):
     1
     """
     "*** YOUR CODE HERE ***"
-
+    while n != 1:
+        yield n
+        if n % 2 == 0:
+            n = n // 2
+        else:
+            n = n * 3 + 1
+    yield n
