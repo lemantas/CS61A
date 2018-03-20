@@ -46,6 +46,9 @@ def add_streams(s1, s2):
     14
     """
     "*** YOUR CODE HERE ***"
+    def compute_rest():
+        return add_streams(s1.rest, s2.rest)
+    return Stream(s1.first + s2.first, compute_rest)
 
 def make_fib_stream():
     """Return a stream containing the Fib sequence.
@@ -59,6 +62,11 @@ def make_fib_stream():
     3
     """
     "*** YOUR CODE HERE ***"
+    def helper(a, b):
+        def compute_rest():
+            return helper(b, a+b)
+        return Stream(a, compute_rest)
+    return helper(0, 1)
 
 def filter_stream(filter_func, stream):
     def make_filtered_rest():
@@ -86,3 +94,8 @@ def interleave(stream1, stream2):
     1
     """     
     "*** YOUR CODE HERE ***"
+    if stream1.first == Stream.empty:
+        return Stream.empty
+    def compute_rest():
+        return interleave(stream2, stream1.rest)
+    return Stream(stream1.first, compute_rest)
