@@ -8,7 +8,8 @@
 
 create table california as
   -- REPLACE THIS LINE
-  select 'YOUR CODE HERE';
+  select * FROM adjacencies
+  WHERE s1 = "CA";
 
 -- Finds lengths of possible paths between two states
 create table distances as
