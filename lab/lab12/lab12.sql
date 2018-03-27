@@ -16,10 +16,15 @@ create table distances as
   with
     distance(start, end, hops) as (
       -- REPLACE THIS LINE
-      select 'Your', 'Code', 'Here'
+      select s1, s2, 1
+        from adjacencies union
+      select start, s2, hops+1
+        from distance, adjacencies
+        where s1 = end and hops <= 14
     )
   select * from distance;
 
 create table three_hops as
   -- REPLACE THIS LINE
-  select 'YOUR CODE HERE';
+  select start from distance
+    where end = "CA" and hops = 3;
