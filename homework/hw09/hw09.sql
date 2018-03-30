@@ -49,20 +49,22 @@ create table sentences as
 
 
 -- Ways to stack 4 dogs to a height of at least 170, ordered by total height
-create table stacks as
-  with 
-    stack_recur(dogs, total, n, max) as (
-      select name, height, 1, height from dogs union
-      select dogs || ', ' || name, total+height, n+1, height 
-        from stack_recur, dogs
-        where n < 4 and max < height
+CREATE TABLE stacks AS
+  WITH
+    tower_of_dogs(dogs, total, n, max) AS (
+      SELECT name, height, 1, height FROM dogs UNION
+      SELECT dogs || ', ' || name, total+height, n+1, height 
+        FROM tower_of_dogs, dogs
+        WHERE n < 4 AND max < height
     )
-select dogs, total from stack_recur 
-  where total >= 170 and n = 4 order by total;
+SELECT dogs, total FROM tower_of_dogs 
+  WHERE total >= 170 ORDER BY total;
 
 
-create table tallest as
-select "REPLACE THIS LINE WITH YOUR SOLUTION";
+CREATE TABLE tallest AS
+    SELECT height, name FROM dogs 
+        GROUP BY height / 10 HAVING MAX(height % 10) AND COUNT(*) > 1;
+
 
 
 -- All non-parent relations ordered by height difference
