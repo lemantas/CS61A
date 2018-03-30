@@ -39,12 +39,26 @@ SELECT child FROM parents, dogs WHERE parent = name ORDER BY height DESC;
 
 -- Sentences about siblings that are the same size
 create table sentences as
-select "REPLACE THIS LINE WITH YOUR SOLUTION";
+    WITH siblings(first, second) AS (
+        SELECT a.child, b.child from parents as a, parents as b
+            WHERE a.parent = b.parent AND a.child > b.child
+        )
+    SELECT first || ' and ' || second || ' are ' || a.size || ' siblings '
+        FROM siblings, size_of_dogs as a, size_of_dogs as b
+        WHERE a.size = b.size AND a.name = first AND b.name = second;
 
 
 -- Ways to stack 4 dogs to a height of at least 170, ordered by total height
 create table stacks as
-select "REPLACE THIS LINE WITH YOUR SOLUTION";
+  with 
+    stack_recur(dogs, total, n, max) as (
+      select name, height, 1, height from dogs union
+      select dogs || ', ' || name, total+height, n+1, height 
+        from stack_recur, dogs
+        where n < 4 and max < height
+    )
+select dogs, total from stack_recur 
+  where total >= 170 and n = 4 order by total;
 
 
 create table tallest as
