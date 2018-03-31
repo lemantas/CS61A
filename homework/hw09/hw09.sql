@@ -68,7 +68,18 @@ CREATE TABLE tallest AS
 
 
 -- All non-parent relations ordered by height difference
-create table non_parents as
-select "REPLACE THIS LINE WITH YOUR SOLUTION";
+CREATE TABLE non_parents AS 
+  WITH
+    non_parents(ancestor, descendent) AS (
+      SELECT a.parent, b.child FROM parents AS a, parents AS b
+	    WHERE a.child = b.parent UNION
+	  SELECT ancestor, child FROM non_parents, parents 
+	    WHERE parent = descendent
+	)
+  SELECT ancestor, descendent FROM non_parents UNION
+  SELECT descendent, ancestor FROM non_parents;
 
-
+SELECT a.ancestor, a.descendent
+  FROM non_parents AS a, dogs as b, dogs as c
+  WHERE a.ancestor = b.name AND a.descendent = c.name  
+  ORDER BY b.height - c.height;
