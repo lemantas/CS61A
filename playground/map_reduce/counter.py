@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
-from mr import values_by_key, emit
+from mr import emit
 
 
 def count_vowels(line):
@@ -10,8 +10,5 @@ def count_vowels(line):
         if count > 0:
             emit(vowel, count)
             
-try:
-    for key, value_iterator in values_by_key(sys.stdin):
-        emit(key, sum(value_iterator))
-except KeyboardInterrupt:
-    print("\nbye bye!")
+for line in sys.stdin:
+    count_vowels(line)
