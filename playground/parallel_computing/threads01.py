@@ -8,6 +8,6 @@ def thread_hello():
     
 def thread_say_hello():
     print("hello from", threading.current_thread().name)
-    
 
+# simply testing different threads
 thread_hello()
